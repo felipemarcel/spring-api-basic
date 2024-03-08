@@ -4,17 +4,25 @@ import org.example.api.model.Book;
 import org.example.api.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
 
-    private final BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     @Autowired
     public BookController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
+    }
+
+    @GetMapping
+    public ResponseEntity<Iterable<Book>> findAll() {
+        return ok(bookRepository.findAll());
     }
 
     @PostMapping
