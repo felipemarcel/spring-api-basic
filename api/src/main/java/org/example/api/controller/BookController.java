@@ -16,7 +16,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/api/books")
 public class BookController {
 
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
     @Autowired
     public BookController(BookRepository bookRepository) {
