@@ -1,8 +1,7 @@
 package org.example.api.controller;
 
-import org.example.api.exception.BookNotFoundException;
 import org.example.api.model.Author;
-import org.example.api.model.Book;
+import org.example.api.repository.AuthorCountBooksProjection;
 import org.example.api.repository.AuthorRepository;
 import org.example.api.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +18,17 @@ import static org.springframework.http.ResponseEntity.ok;
 public class AuthorController {
 
     private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
 
     @Autowired
-    public AuthorController(AuthorRepository authorRepository) {
+    public AuthorController(AuthorRepository authorRepository, BookRepository bookRepository) {
         this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<Author>> findAll() {
-        return ok(authorRepository.findAll());
+    public ResponseEntity<List<AuthorCountBooksProjection>> findAll() {
+        return ok(bookRepository.countByAuthor());
     }
 
     @PostMapping
@@ -35,6 +36,5 @@ public class AuthorController {
     public Author create(@RequestBody Author author) {
         return authorRepository.save(author);
     }
-
 
 }

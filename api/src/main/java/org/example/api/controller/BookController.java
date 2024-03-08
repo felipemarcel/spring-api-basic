@@ -1,7 +1,8 @@
 package org.example.api.controller;
 
-import org.example.api.exception.BookNotFoundException;
-import org.example.api.model.Book;
+import org.example.api.exception.*;
+import org.example.api.model.*;
+import org.example.api.repository.AuthorRepository;
 import org.example.api.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,12 @@ import static org.springframework.http.ResponseEntity.ok;
 public class BookController {
 
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
 
     @Autowired
-    public BookController(BookRepository bookRepository) {
+    public BookController(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
     }
 
     @GetMapping
@@ -30,8 +33,12 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Book create(@RequestBody Book book) {
-        return bookRepository.save(book);
+    public Book create(@RequestBody BookRequestBody book) {
+        var author = authorRepository
+                .findById(book.authorId())
+                .orElseThrow(() -> new AuthorNotFoundException("Author not found."));
+        var newBook = new Book(book.title(), author);
+        return bookRepository.save(newBook);
     }
 
     @GetMapping("/title/{bookTitle}")

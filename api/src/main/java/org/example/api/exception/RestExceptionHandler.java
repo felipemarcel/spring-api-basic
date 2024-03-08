@@ -12,9 +12,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({BookNotFoundException.class})
+    @ExceptionHandler({BookNotFoundException.class, AuthorNotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
-        return handleExceptionInternal(ex, "Book not found",
+        return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), NOT_FOUND, request);
     }
 }

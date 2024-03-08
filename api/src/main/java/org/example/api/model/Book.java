@@ -18,6 +18,14 @@ public class Book {
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private Author author;
 
+    public Book(String title, Author author) {
+        this.title = title;
+        this.author = author;
+    }
+
+    public Book() {
+    }
+
     public long getId() {
         return id;
     }
